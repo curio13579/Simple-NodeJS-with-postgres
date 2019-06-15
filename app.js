@@ -1,11 +1,32 @@
-const express = require('express');
-const Sequelize = require('sequelize');
-const bodyParser = require('body-parser');
+var express = require('express');
+var Sequelize = require('sequelize');
+var bodyParser = require('body-parser');
+// var path = require('path');
+// var favicon = require('serve-favicon');
+// var logger = require('morgan');
+// var cookieParser = require('cookie-parser');
+// var nunjucks = require("nunjucks");
+// var session = require('express-session');
+// var fileUpload = require('express-fileupload');
 
-const app = express();
+var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(logger('dev'));
+// app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(fileUpload());
+
+// view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+
 
 const port = 8000;
 
@@ -94,7 +115,8 @@ app.get('/api/user/data', function (req,res) {
        }
       
        values = User.findAll({
-           where: query
+           raw: true,
+           plain: true
        });
 
         console.log("Values Are:");
