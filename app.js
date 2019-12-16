@@ -1,8 +1,8 @@
-var express = require('express');
-var Sequelize = require('sequelize');
-var bodyParser = require('body-parser');
+const express = require('express');
+const Sequelize = require('sequelize');
+const bodyParser = require('body-parser');
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,14 +13,15 @@ const port = 8000;
 
 // Database Config
 
-const sequelize = new Sequelize('fountane', 'postgres', 'Sai123', {
+const sequelize = new Sequelize('fountane', 'navaneethnivol', 'Admin123', {
     host: 'localhost',
     dialect: 'postgres'
-  });
+});
 
 // Database connection 
 
-sequelize.authenticate().then( ()=> {
+sequelize.authenticate()
+.then( ()=> {
     console.log("Database Connected");
 }).catch( err => {
     console.error('unable to connect to Database');
@@ -30,7 +31,7 @@ sequelize.authenticate().then( ()=> {
 // Creating DB schemas and Creating Tables
 
 
-const User = sequelize.define('user',{
+const User = sequelize.define('users',{
 
     id: {
         type: Sequelize.BIGINT,
@@ -45,7 +46,7 @@ const User = sequelize.define('user',{
         timestamps: false
 });
 
-const Car = sequelize.define('car',{
+const Car = sequelize.define('cars',{
 
     id: {
         type: Sequelize.BIGINT,
@@ -83,7 +84,7 @@ app.get('/', function (req,res) {
 });
 
 
-app.get('/api/user/data', async function (req,res) {
+app.get('/api/user/data',async function (req,res) {
 
     let query = {};
 
@@ -94,17 +95,16 @@ app.get('/api/user/data', async function (req,res) {
            query.id = req.query.id;
        }
       
-       values = await User.findAll({
-           raw: true,
-           plain: true
-       });
+       values =  await User.findAll();
 
         res.status(200).json({
             success: true,
             data: values
         })
 
-   } catch (err) {
+   } catch(err){
+    
+        console.log(err);
 
         res.status(500).json({
             success: false,
@@ -118,6 +118,11 @@ app.get('/api/car/data', async function (req,res) {
     let query = {};
 
    try {
+
+        if(req.query.id)
+        {
+            query.id = req.query.id;
+        }
 
        values = await Car.findAll({
            where: query
